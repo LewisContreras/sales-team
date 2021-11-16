@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Grow, Grid } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-
-import { getPosts } from '../../actions/posts';
-import Posts from '../Posts/Posts';
-import Form from '../Form/Form';
-import Search from '../Search/Search';
 import { Redirect } from 'react-router-dom';
 
-const Home = () => {
+import CardsUsers from './CardsUsers/CardsUsers';
+import FormUsers from './FormUsers/FormUsers';
+import { getUsers } from '../../actions/users';
+
+const Users = () => {
   const [currentId, setCurrentId] = useState(0);
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('profile'));
 
   useEffect(() => {
-    dispatch(getPosts());
+    dispatch(getUsers());
   }, [currentId, dispatch]);
 
-  if (user?.result?.state !== "authorized") {
+  if (user?.result?.role !== "admin") {
     return (
-        <Redirect to="/auth" />
+        <Redirect to="/sales" />
     );
   }
 
@@ -28,11 +27,10 @@ const Home = () => {
       <Container>
         <Grid container justify="space-between" alignItems="stretch" spacing={3}>
           <Grid item xs={12} sm={7}>
-            <Search/>
-            <Posts setCurrentId={setCurrentId} />
+            <CardsUsers setCurrentId={setCurrentId} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Form currentId={currentId} setCurrentId={setCurrentId} />
+            <FormUsers currentId={currentId} setCurrentId={setCurrentId} />
           </Grid>
         </Grid>
       </Container>
@@ -40,4 +38,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Users;

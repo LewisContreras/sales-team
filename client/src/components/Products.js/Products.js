@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Grow, Grid } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-
-import { getPosts } from '../../actions/posts';
-import Posts from '../Posts/Posts';
-import Form from '../Form/Form';
-import Search from '../Search/Search';
 import { Redirect } from 'react-router-dom';
 
-const Home = () => {
+import CardsProducts from './CardsProducts/CardsProducts';
+import FormProducts from './FormProducts/FormProducts';
+import SearchProducts from './SearchProducts/SearchProducts';
+import { getProducts } from '../../actions/products';
+
+const Products = () => {
   const [currentId, setCurrentId] = useState(0);
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('profile'));
 
   useEffect(() => {
-    dispatch(getPosts());
+    dispatch(getProducts());
   }, [currentId, dispatch]);
 
-  if (user?.result?.state !== "authorized") {
+  if (user?.result?.role !== "admin") {
     return (
-        <Redirect to="/auth" />
+        <Redirect to="/sales" />
     );
   }
 
@@ -28,11 +28,11 @@ const Home = () => {
       <Container>
         <Grid container justify="space-between" alignItems="stretch" spacing={3}>
           <Grid item xs={12} sm={7}>
-            <Search/>
-            <Posts setCurrentId={setCurrentId} />
+            <SearchProducts/>
+            <CardsProducts setCurrentId={setCurrentId} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Form currentId={currentId} setCurrentId={setCurrentId} />
+            <FormProducts currentId={currentId} setCurrentId={setCurrentId} />
           </Grid>
         </Grid>
       </Container>
@@ -40,4 +40,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Products;
