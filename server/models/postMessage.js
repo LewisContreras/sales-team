@@ -1,11 +1,40 @@
 import mongoose from 'mongoose';
 
-const postSchema = mongoose.Schema({
-    title: String,
-    message: String,
-    name: String,
-    creator: String,
-    tags: [String],
+const saleSchema = mongoose.Schema({
+    totalPrice:{
+        type: Number,
+        required: true
+    } ,
+
+    price: {
+        type: Number,
+        required: true
+    } ,
+    product: {
+        type: String,
+        required: true
+    },
+    saleId: {
+        type: String,
+        required: true
+    },
+    quantity: {
+        type: Number,
+        required: true
+    } ,
+    name:String,
+    seller: {
+        type: String,
+        required: true
+    },
+    client: {
+        type: String,
+        required: true
+    },
+    docClient: {
+        type: String,
+        required: true
+    },
     selectedFile: String,
     likes: { type: [String], default: [] },
     createdAt: {
@@ -14,6 +43,6 @@ const postSchema = mongoose.Schema({
     },
 })
 
-var PostMessage = mongoose.model('PostMessage', postSchema);
+var PostMessage = mongoose.model('Sale', saleSchema);
 
 export default PostMessage;

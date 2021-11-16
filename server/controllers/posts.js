@@ -30,7 +30,7 @@ export const getPost = async (req, res) => {
 export const createPost = async (req, res) => {
     const post = req.body;
 
-    const newPostMessage = new PostMessage({ ...post, creator: req.userId, createdAt: new Date().toISOString() })
+    const newPostMessage = new PostMessage({ ...post, seller: req.userId, createdAt: new Date().toISOString() })
 
     try {
         await newPostMessage.save();
@@ -41,13 +41,35 @@ export const createPost = async (req, res) => {
     }
 }
 
+export const findPost = async (req, res) => {
+    const { saleId, client, docClient } = req.body;
+  
+    try {
+      let searched;
+      if( saleId !== ""){
+        searched = await PostMessage.find({ saleId });
+      } else if (client !== "") {
+        searched = await PostMessage.find({ client });
+      } else if( docClient !== "" ) {
+        searched = await PostMessage.find({ docClient });
+      } else {
+        searched = await PostMessage.find({});
+      }
+      res.status(200).json({ searched});
+    } catch (error) {
+      res.status(500).json({ message: "Something went wrong" });
+      
+      console.log(error);
+    }
+  };
+
 export const updatePost = async (req, res) => {
     const { id } = req.params;
-    const { title, message, creator, selectedFile, tags } = req.body;
+    const post = req.body;
     
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
-    const updatedPost = { creator, title, message, tags, selectedFile, _id: id };
+    const updatedPost = { ...post, _id: id };
 
     await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
 
@@ -85,6 +107,5 @@ export const likePost = async (req, res) => {
     const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
     res.status(200).json(updatedPost);
 }
-
 
 export default router;
