@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Paper } from '@material-ui/core';
+import { TextField, Button, Typography, Paper, MenuItem, Select, InputLabel, FormControl } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
 
@@ -31,7 +31,7 @@ const FormUsers = ({ currentId, setCurrentId }) => {
       dispatch(createUser({ ...postData, name: user?.result?.name}));
       clear();
     } else {
-      dispatch(updateUser(currentId, { ...postData, name: user?.result?.name }));
+      dispatch(updateUser(currentId, { ...postData}));
       clear();
     }
     alertSuccess()
@@ -45,11 +45,38 @@ const FormUsers = ({ currentId, setCurrentId }) => {
 
   return (
     <Paper  className={classes.paper}>
-      <form  autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-        <Typography variant="h6">{currentId ? `Editing "${post.product}"` : 'Creating a Product'}</Typography>
-        <TextField name="name" variant="outlined" disabled label="Name" fullWidth value={postData.name} onChange={(e) => setPostData({ ...postData, name: e.target.value })} />
-        <TextField name="role" variant="outlined" label="Role" fullWidth value={postData.role} onChange={(e) => setPostData({ ...postData, role: e.target.value })} />
-        <TextField name="state" variant="outlined" label="State" fullWidth value={postData.state} onChange={(e) => setPostData({ ...postData, state: e.target.value })} />
+      <form  autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+        <Typography variant="h6">{currentId ? `Editing "${post.name}"` : 'Choose a User'}</Typography>
+        <TextField required name="name" variant="outlined" disabled label="Name" fullWidth value={postData.name} onChange={(e) => setPostData({ ...postData, name: e.target.value })} />
+        <FormControl style={{margin: "0 0 10px 0"}} disabled={!post} required fullWidth >
+        <InputLabel id="role-label">Role</InputLabel>
+        <Select
+          labelId="role-label"
+          value={postData.role}
+          name="role"
+          label="Role"
+          variant="outlined"
+          onChange={(e) => setPostData({ ...postData, role: e.target.value })}
+        >
+          <MenuItem value="admin">Admin</MenuItem>
+          <MenuItem value="seller">Seller</MenuItem>
+        </Select>
+        </FormControl>
+        <FormControl disabled={!post} required fullWidth >
+        <InputLabel id="state-label">State</InputLabel>
+        <Select
+          labelId="state-label"
+          value={postData.state}
+          name="state"
+          label="State"
+          variant="outlined"
+          onChange={(e) => setPostData({ ...postData, state: e.target.value })}
+        >
+          <MenuItem value="pending">Pending</MenuItem>
+          <MenuItem value="authorized">Authorized</MenuItem>
+          <MenuItem value="unauthorized">Unauthorized</MenuItem>
+        </Select>
+        </FormControl>
         <div className={classes.fileInput}><FileBase type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} /></div>
         <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
         <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>

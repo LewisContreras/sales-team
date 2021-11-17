@@ -24,9 +24,11 @@ const CardProduct = ({ post, setCurrentId }) => {
           <MoreHorizIcon fontSize="default" />
         </Button>
       </div>
-      <Typography className={classes.title} gutterBottom variant="h5" component="h2">{post.description}</Typography>
+      <Typography className={classes.title} gutterBottom variant="h5" component="h2">{post.state}</Typography>
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">{post.price}</Typography>
+        <Typography variant="body2" color="textSecondary" component="p">Product identificator: {post.productId}</Typography>
+        <Typography variant="body2" color="textSecondary" component="p">Description: {post.description}</Typography>
+        <Typography variant="body2" color="textSecondary" component="p">Price: {post.price}</Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button size="small" color="secondary" onClick={() => dispatch(deleteProduct(post._id))}>

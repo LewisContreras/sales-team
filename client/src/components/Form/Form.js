@@ -21,17 +21,17 @@ const Form = ({ currentId, setCurrentId }) => {
 
   const clear = () => {
     setCurrentId(0);
-    setPostData({ price: '', saleId: '' , quantity: '', product:'',client: '', selectedFile: '', docClient: '' });
+    setPostData({ price: 0, saleId: '' , quantity: 0, product:'',client: '', selectedFile: '', docClient: '' });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (currentId === 0) {
-      dispatch(createPost({ ...postData, name: user?.result?.name, price: parseInt(postData.price), quantity: parseInt(postData.quantity), totalPrice: parseInt(postData.price) * parseInt(postData.quantity) }));
+      dispatch(createPost({ ...postData, name: user?.result?.name, totalPrice: postData.price * postData.quantity }));
       clear();
     } else {
-      dispatch(updatePost(currentId, { ...postData, name: user?.result?.name, price: parseInt(postData.price), quantity: parseInt(postData.quantity), totalPrice: parseInt(postData.price) * parseInt(postData.quantity) }));
+      dispatch(updatePost(currentId, { ...postData, totalPrice: postData.price * postData.quantity }));
       clear();
     }
     alertSuccess()
@@ -45,14 +45,14 @@ const Form = ({ currentId, setCurrentId }) => {
 
   return (
     <Paper  className={classes.paper}>
-      <form  autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+      <form  autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
         <Typography variant="h6">{currentId ? `Editing "${post.product}"` : 'Creating a Sale'}</Typography>
-        <TextField name="product" variant="outlined" label="Product" fullWidth value={postData.product} onChange={(e) => setPostData({ ...postData, product: e.target.value })} />
-        <TextField name="saleId" variant="outlined" label="Sale Identification" fullWidth value={postData.saleId} disabled={!!currentId} onChange={(e) => setPostData({ ...postData, saleId: e.target.value })} />
-        <TextField name="price" variant="outlined" label="Price" fullWidth value={postData.price} onChange={(e) => setPostData({ ...postData, price: e.target.value })} />
-        <TextField name="quantity" variant="outlined" label="Quantity" fullWidth value={postData.quantity} onChange={(e) => setPostData({ ...postData, quantity: e.target.value })} />
-        <TextField name="client" variant="outlined" label="Client" fullWidth value={postData.client} onChange={(e) => setPostData({ ...postData, client: e.target.value })} />
-        <TextField name="docClient" variant="outlined" label="Client Document" fullWidth value={postData.docClient} onChange={(e) => setPostData({ ...postData, docClient: e.target.value })} />
+        <TextField required name="product" variant="outlined" label="Product" fullWidth value={postData.product} onChange={(e) => setPostData({ ...postData, product: e.target.value })} />
+        <TextField required name="saleId" variant="outlined" label="Sale Identification" fullWidth value={postData.saleId} disabled={!!currentId} onChange={(e) => setPostData({ ...postData, saleId: e.target.value })} />
+        <TextField required type="number" name="price" variant="outlined" label="Price" fullWidth value={postData.price} onChange={(e) => setPostData({ ...postData, price: e.target.value })} />
+        <TextField required type="number" name="quantity" variant="outlined" label="Quantity" fullWidth value={postData.quantity} onChange={(e) => setPostData({ ...postData, quantity: e.target.value })} />
+        <TextField required name="client" variant="outlined" label="Client" fullWidth value={postData.client} onChange={(e) => setPostData({ ...postData, client: e.target.value })} />
+        <TextField required name="docClient" variant="outlined" label="Client Document" fullWidth value={postData.docClient} onChange={(e) => setPostData({ ...postData, docClient: e.target.value })} />
         <div className={classes.fileInput}><FileBase type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} /></div>
         <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
         <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>

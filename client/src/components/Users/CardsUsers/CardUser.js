@@ -27,7 +27,8 @@ const CardUser = ({ post, setCurrentId }) => {
 
       <Typography className={classes.title} gutterBottom variant="h5" component="h2">{post.role}</Typography>
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">{post.state}</Typography>
+      <Typography variant="body2" color="textSecondary" component="p">Email: {post.email}</Typography>
+        <Typography variant="body2" color="textSecondary" component="p">State: {post.state}</Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button size="small" color="secondary" onClick={() => dispatch(deleteUser(post._id))}>
